@@ -1,3 +1,26 @@
+## control_toolbox (jazzy) - 3.2.0-4
+
+The packages in the `control_toolbox` repository were released into the `jazzy` distro by running `/home/z572/gits/revyos-ros/venv/bin/bloom-release -r jazzy control_toolbox --override-release-repository-push-url git@github.com:revyos-ros/control_toolbox-release` on `Mon, 24 Jun 2024 09:34:59 -0000`
+
+The `control_toolbox` package was released.
+
+Version of package(s) in repository `control_toolbox`:
+
+- upstream repository: https://github.com/ros-controls/control_toolbox.git
+- release repository: https://github.com/revyos-ros/control_toolbox-release.git
+- rosdistro version: `3.2.0-3`
+- old version: `3.2.0-3`
+- new version: `3.2.0-4`
+
+Versions of tools used:
+
+- bloom version: `0.12.0`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## control_toolbox (rolling) - 3.2.0-1
 
 The packages in the `control_toolbox` repository were released into the `rolling` distro by running `/usr/bin/bloom-release --ros-distro rolling control_toolbox` on `Tue, 12 Dec 2023 13:57:21 -0000`
