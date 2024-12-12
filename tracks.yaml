@@ -1,4 +1,4 @@
-release_repo_url: git@github.com:revyos-ros/control_toolbox-release
+release_repo_url: git@github.com:revyos-ros/control_toolbox-release.git
 tracks:
   foxy:
     actions:
