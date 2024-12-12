@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 project(control_toolbox LANGUAGES CXX)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Werror=conversion -Werror=unused-but-set-variable
+                      -Werror=return-type -Werror=shadow -Werror=format)
 endif()
 
 if(WIN32)
@@ -51,12 +52,11 @@ set(CONTROL_FILTERS_INCLUDE_DEPENDS
   generate_parameter_library
   pluginlib
   geometry_msgs
-  Eigen3
 )
-
 foreach(Dependency IN ITEMS ${CONTROL_FILTERS_INCLUDE_DEPENDS})
   find_package(${Dependency} REQUIRED)
 endforeach()
+find_package(Eigen3 REQUIRED NO_MODULE)
 
 generate_parameter_library(
   low_pass_filter_parameters
@@ -72,8 +72,32 @@ target_include_directories(low_pass_filter PUBLIC
     $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:include/control_toolbox>
 )
-target_link_libraries(low_pass_filter PUBLIC low_pass_filter_parameters)
+target_link_libraries(low_pass_filter PUBLIC
+  low_pass_filter_parameters
+  Eigen3::Eigen
+)
 ament_target_dependencies(low_pass_filter PUBLIC ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+
+generate_parameter_library(
+  rate_limiter_parameters
+  src/control_filters/rate_limiter_parameters.yaml
+  include/control_filters/custom_validators.hpp
+)
+
+add_library(rate_limiter SHARED
+  src/control_filters/rate_limiter.cpp
+)
+target_compile_features(rate_limiter PUBLIC cxx_std_17)
+target_include_directories(rate_limiter PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
+    $<INSTALL_INTERFACE:include/control_toolbox>
+)
+target_link_libraries(rate_limiter PUBLIC
+  rate_limiter_parameters
+  Eigen3::Eigen
+)
+ament_target_dependencies(rate_limiter PUBLIC ${CONTROL_FILTERS_INCLUDE_DEPENDS})
 
 # Install pluginlib xml
 pluginlib_export_plugin_description_file(filters control_filters.xml)
@@ -88,6 +112,9 @@ if(BUILD_TESTING)
 
   ament_add_gmock(pid_tests test/pid_tests.cpp)
   target_link_libraries(pid_tests control_toolbox)
+
+  ament_add_gmock(rate_limiter_tests test/rate_limiter.cpp)
+  target_link_libraries(rate_limiter_tests control_toolbox)
 
   ament_add_gtest(pid_parameters_tests test/pid_parameters_tests.cpp)
   target_link_libraries(pid_parameters_tests control_toolbox)
@@ -106,6 +133,16 @@ if(BUILD_TESTING)
   ament_add_gmock(test_load_low_pass_filter test/control_filters/test_load_low_pass_filter.cpp)
   target_link_libraries(test_load_low_pass_filter low_pass_filter low_pass_filter_parameters)
   ament_target_dependencies(test_load_low_pass_filter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+
+  add_rostest_with_parameters_gmock(test_rate_limiter test/control_filters/test_rate_limiter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/control_filters/test_rate_limiter_parameters.yaml
+  )
+  target_link_libraries(test_rate_limiter rate_limiter rate_limiter_parameters)
+  ament_target_dependencies(test_rate_limiter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+
+  ament_add_gmock(test_load_rate_limiter test/control_filters/test_load_rate_limiter.cpp)
+  target_link_libraries(test_load_rate_limiter rate_limiter rate_limiter_parameters)
+  ament_target_dependencies(test_load_rate_limiter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
 endif()
 
 # Install
@@ -113,7 +150,9 @@ install(
   DIRECTORY include/
   DESTINATION include/control_toolbox
 )
-install(TARGETS control_toolbox low_pass_filter low_pass_filter_parameters
+install(TARGETS control_toolbox
+  low_pass_filter low_pass_filter_parameters
+  rate_limiter rate_limiter_parameters
   EXPORT export_control_toolbox
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
