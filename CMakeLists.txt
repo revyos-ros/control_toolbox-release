@@ -7,11 +7,16 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 endif()
 
 if(WIN32)
-  # Enable Math Constants
-  # https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=vs-2019
   add_compile_definitions(
+    # For math constants
+    # https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=vs-2019
     _USE_MATH_DEFINES
+    # Minimize Windows namespace collision
+    NOMINMAX
+    WIN32_LEAN_AND_MEAN
   )
+  # set the same behavior for windows as it is on linux
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
@@ -99,6 +104,24 @@ target_link_libraries(rate_limiter PUBLIC
 )
 ament_target_dependencies(rate_limiter PUBLIC ${CONTROL_FILTERS_INCLUDE_DEPENDS})
 
+generate_parameter_library(
+  exponential_filter_parameters
+  src/control_filters/exponential_filter_parameters.yaml
+)
+
+add_library(exponential_filter SHARED
+  src/control_filters/exponential_filter.cpp
+)
+target_compile_features(exponential_filter PUBLIC cxx_std_17)
+target_include_directories(exponential_filter PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include/control_toolbox>
+)
+target_link_libraries(exponential_filter PUBLIC
+  exponential_filter_parameters
+)
+ament_target_dependencies(exponential_filter PUBLIC ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+
 # Install pluginlib xml
 pluginlib_export_plugin_description_file(filters control_filters.xml)
 
@@ -124,21 +147,37 @@ if(BUILD_TESTING)
   ament_target_dependencies(pid_publisher_tests rclcpp_lifecycle)
 
   ## Control Filters
+  # exponential_filter
+  add_rostest_with_parameters_gmock(test_exponential_filter test/control_filters/test_exponential_filter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/control_filters/test_exponential_filter_parameters.yaml
+  )
+  target_link_libraries(test_exponential_filter exponential_filter exponential_filter_parameters)
+  ament_target_dependencies(test_exponential_filter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+  set_tests_properties(test_exponential_filter PROPERTIES TIMEOUT 2)
+
+  ament_add_gmock(test_load_exponential_filter test/control_filters/test_load_exponential_filter.cpp)
+  target_link_libraries(test_load_exponential_filter exponential_filter exponential_filter_parameters)
+  ament_target_dependencies(test_load_exponential_filter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+
+  # low_pass_filter
   add_rostest_with_parameters_gmock(test_low_pass_filter test/control_filters/test_low_pass_filter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test/control_filters/test_low_pass_filter_parameters.yaml
   )
   target_link_libraries(test_low_pass_filter low_pass_filter low_pass_filter_parameters)
   ament_target_dependencies(test_low_pass_filter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+  set_tests_properties(test_low_pass_filter PROPERTIES TIMEOUT 2)
 
   ament_add_gmock(test_load_low_pass_filter test/control_filters/test_load_low_pass_filter.cpp)
   target_link_libraries(test_load_low_pass_filter low_pass_filter low_pass_filter_parameters)
   ament_target_dependencies(test_load_low_pass_filter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
 
+  # rate_limiter
   add_rostest_with_parameters_gmock(test_rate_limiter test/control_filters/test_rate_limiter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test/control_filters/test_rate_limiter_parameters.yaml
   )
   target_link_libraries(test_rate_limiter rate_limiter rate_limiter_parameters)
   ament_target_dependencies(test_rate_limiter ${CONTROL_FILTERS_INCLUDE_DEPENDS})
+  set_tests_properties(test_rate_limiter PROPERTIES TIMEOUT 2)
 
   ament_add_gmock(test_load_rate_limiter test/control_filters/test_load_rate_limiter.cpp)
   target_link_libraries(test_load_rate_limiter rate_limiter rate_limiter_parameters)
@@ -153,6 +192,7 @@ install(
 install(TARGETS control_toolbox
   low_pass_filter low_pass_filter_parameters
   rate_limiter rate_limiter_parameters
+  exponential_filter exponential_filter_parameters
   EXPORT export_control_toolbox
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
