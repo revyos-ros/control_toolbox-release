@@ -2,23 +2,24 @@
 Changelog for package control_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-4.0.1 (2025-02-13)
+3.6.1 (2025-04-06)
 ------------------
-* Rename save_iterm to save_i_term (`#285 <https://github.com/ros-controls/control_toolbox/issues/285>`_)
-* Bump version of pre-commit hooks (`#282 <https://github.com/ros-controls/control_toolbox/issues/282>`_)
-* Use ABI workflow from ros2_control_ci (`#278 <https://github.com/ros-controls/control_toolbox/issues/278>`_)
-* Use jazzy branch for realtime_tools (`#279 <https://github.com/ros-controls/control_toolbox/issues/279>`_)
-* Contributors: Christoph Fröhlich, github-actions[bot]
+* Add copyright owner (`#330 <https://github.com/ros-controls/control_toolbox/issues/330>`_) (`#332 <https://github.com/ros-controls/control_toolbox/issues/332>`_)
+* Bump version of pre-commit hooks (`#321 <https://github.com/ros-controls/control_toolbox/issues/321>`_) (`#324 <https://github.com/ros-controls/control_toolbox/issues/324>`_)
+* Make downstream job a semi-binary build (backport `#301 <https://github.com/ros-controls/control_toolbox/issues/301>`_) (`#307 <https://github.com/ros-controls/control_toolbox/issues/307>`_)
+* Update upstream/downstream repository branches (`#309 <https://github.com/ros-controls/control_toolbox/issues/309>`_) (`#310 <https://github.com/ros-controls/control_toolbox/issues/310>`_)
+* Change workflows and readme for jazzy branch (`#292 <https://github.com/ros-controls/control_toolbox/issues/292>`_) (`#295 <https://github.com/ros-controls/control_toolbox/issues/295>`_)
+* Bump version of pre-commit hooks (`#288 <https://github.com/ros-controls/control_toolbox/issues/288>`_) (`#289 <https://github.com/ros-controls/control_toolbox/issues/289>`_)
+* Bump version of pre-commit hooks (`#282 <https://github.com/ros-controls/control_toolbox/issues/282>`_) (`#283 <https://github.com/ros-controls/control_toolbox/issues/283>`_)
+* Use ABI workflow from ros2_control_ci (backport `#278 <https://github.com/ros-controls/control_toolbox/issues/278>`_) (`#281 <https://github.com/ros-controls/control_toolbox/issues/281>`_)
+* Use jazzy branch for realtime_tools (`#279 <https://github.com/ros-controls/control_toolbox/issues/279>`_) (`#280 <https://github.com/ros-controls/control_toolbox/issues/280>`_)
+* Contributors: mergify[bot]
 
-4.0.0 (2025-01-29)
+3.6.0 (2025-01-17)
 ------------------
-* Rework PID class API (`#246 <https://github.com/ros-controls/control_toolbox/issues/246>`_)
-* [PID] Add support for saving i-term when PID is reset (`#180 <https://github.com/ros-controls/control_toolbox/issues/180>`_)
-* Update codecov badge in README.md (`#273 <https://github.com/ros-controls/control_toolbox/issues/273>`_)
-* Update mergify.yml (`#270 <https://github.com/ros-controls/control_toolbox/issues/270>`_)
-* Branch for humble (`#265 <https://github.com/ros-controls/control_toolbox/issues/265>`_)
-* Update include paths of GPL (`#264 <https://github.com/ros-controls/control_toolbox/issues/264>`_)
-* Contributors: Christoph Fröhlich, Dr. Denis
+* Branch for humble (backport `#265 <https://github.com/ros-controls/control_toolbox/issues/265>`_) (`#271 <https://github.com/ros-controls/control_toolbox/issues/271>`_)
+* Update include paths of GPL (`#264 <https://github.com/ros-controls/control_toolbox/issues/264>`_) (`#266 <https://github.com/ros-controls/control_toolbox/issues/266>`_)
+* Contributors: mergify[bot]
 
 3.5.0 (2025-01-15)
 ------------------
