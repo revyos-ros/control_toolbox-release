@@ -6,7 +6,7 @@ on:
       - ros2-master
   schedule:
     # Run every day to detect flakiness and broken dependencies
-    - cron: '03 3 * * *'
+    - cron: '03 3 * * MON-FRI'
 
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ROS_DISTRO: [rolling]
+        ROS_DISTRO: [kilted, rolling]
     with:
       ros_distro: ${{ matrix.ROS_DISTRO }}
       upstream_workspace: control_toolbox.${{ matrix.ROS_DISTRO }}.repos

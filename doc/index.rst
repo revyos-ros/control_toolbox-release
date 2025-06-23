@@ -1,23 +1,11 @@
-Welcome to the documentation for control_toolbox
-================================================
+:github_url: https://github.com/ros-controls/control_toolbox/blob/{REPOS_FILE_BRANCH}/doc/index.rst
 
-This package contains several C++ classes useful in writing controllers.
+control_toolbox
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This package contains several C++ classes and filter plugins useful in writing controllers.
 
-For more information of the ros2_control framework see `control.ros.org <https://control.ros.org/>`__.
+.. include:: control_toolbox.md
+   :parser: myst_parser.sphinx_
 
-
-API documentation
-------------------
-
-.. toctree::
-   :maxdepth: 2
-
-   C++ API <generated/index>
-   Service Definitions <generated/service_definitions>
-
-
-Indices and Search
-==================
-
-* :ref:`genindex`
-* :ref:`search`
+.. include:: control_filters.md
+   :parser: myst_parser.sphinx_
