@@ -11,13 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#include <gmock/gmock.h>
 #include <memory>
 #include <string>
 
-#include "rclcpp/utilities.hpp"
+#include "gmock/gmock.h"
 #include "pluginlib/class_loader.hpp"
+#include "rclcpp/utilities.hpp"
 
 #include "control_filters/exponential_filter.hpp"
 
@@ -25,13 +24,13 @@ TEST(TestLoadExponentialFilter, load_exponential_filter_double)
 {
   rclcpp::init(0, nullptr);
 
-  pluginlib::ClassLoader<filters::FilterBase<double>> filter_loader("filters",
-                                                                    "filters::FilterBase<double>");
+  pluginlib::ClassLoader<filters::FilterBase<double>> filter_loader(
+    "filters", "filters::FilterBase<double>");
   std::shared_ptr<filters::FilterBase<double>> filter;
   auto available_classes = filter_loader.getDeclaredClasses();
   std::stringstream sstr;
   sstr << "available filters:" << std::endl;
-  for (const auto& available_class : available_classes)
+  for (const auto & available_class : available_classes)
   {
     sstr << "  " << available_class << std::endl;
   }
