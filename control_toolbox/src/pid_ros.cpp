@@ -465,10 +465,14 @@ void PidROS::publish_pid_state(double cmd, double error, rclcpp::Duration dt)
     pid_state_msg_.timestep = dt;
     pid_state_msg_.error = error;
     pid_state_msg_.error_dot = d_error;
-    pid_state_msg_.i_term = i_term;
-    pid_state_msg_.p_gain = gains.p_gain_;
-    pid_state_msg_.i_gain = gains.i_gain_;
-    pid_state_msg_.d_gain = gains.d_gain_;
+    pid_state_msg_.p_error = p_error;
+    pid_state_msg_.i_error = i_term;
+    pid_state_msg_.d_error = d_error;
+    pid_state_msg_.p_term = gains.p_gain_;
+    pid_state_msg_.i_term = gains.i_gain_;
+    pid_state_msg_.d_term = gains.d_gain_;
+    pid_state_msg_.i_max = gains.i_max_;
+    pid_state_msg_.i_min = gains.i_min_;
     pid_state_msg_.output = cmd;
     rt_state_pub_->try_publish(pid_state_msg_);
   }
@@ -650,5 +654,83 @@ void PidROS::set_parameter_event_callback()
   /// Any parameter under that node. Not just PidROS.
   parameter_callback_ = node_params_->add_on_set_parameters_callback(on_parameter_event_callback);
 }
+
+// TODO(christophfroehlich): Remove deprecated functions
+// BEGIN DEPRECATED
+void PidROS::initPid(double p, double i, double d, double i_max, double i_min, bool antiwindup)
+{
+  initialize_from_args(p, i, d, i_max, i_min, antiwindup);
+}
+
+void PidROS::initPid(
+  double p, double i, double d, double i_max, double i_min, bool antiwindup, bool save_i_term)
+{
+  initialize_from_args(p, i, d, i_max, i_min, antiwindup, save_i_term);
+}
+
+bool PidROS::initPid() { return initialize_from_ros_parameters(); }
+
+double PidROS::computeCommand(double error, rclcpp::Duration dt)
+{
+  double cmd = pid_.compute_command(error, dt);
+  publish_pid_state(cmd, error, dt);
+  return cmd;
+}
+
+double PidROS::computeCommand(double error, double error_dot, rclcpp::Duration dt)
+{
+  double cmd = pid_.compute_command(error, error_dot, dt);
+  publish_pid_state(cmd, error, dt);
+  return cmd;
+}
+
+Pid::Gains PidROS::getGains() { return get_gains(); }
+void PidROS::setGains(double p, double i, double d, double i_max, double i_min, bool antiwindup)
+{
+  set_gains(p, i, d, i_max, i_min, antiwindup);
+}
+
+void PidROS::setGains(const Pid::Gains & gains) { set_gains(gains); }
+
+void PidROS::setCurrentCmd(double cmd) { set_current_cmd(cmd); }
+
+double PidROS::getCurrentCmd() { return get_current_cmd(); }
+
+std::shared_ptr<rclcpp::Publisher<control_msgs::msg::PidState>> PidROS::getPidStatePublisher()
+{
+  return get_pid_state_publisher();
+}
+
+void PidROS::getCurrentPIDErrors(double & pe, double & ie, double & de)
+{
+  get_current_pid_errors(pe, ie, de);
+}
+
+void PidROS::printValues() { print_values(); }
+
+void PidROS::setParameterEventCallback() { set_parameter_event_callback(); }
+
+void PidROS::publishPIDState(double cmd, double error, rclcpp::Duration dt)
+{
+  publish_pid_state(cmd, error, dt);
+}
+
+void PidROS::declareParam(const std::string & param_name, rclcpp::ParameterValue param_value)
+{
+  declare_param(param_name, param_value);
+}
+
+bool PidROS::getDoubleParam(const std::string & param_name, double & value)
+{
+  return get_double_param(param_name, value);
+}
+
+bool PidROS::getBooleanParam(const std::string & param_name, bool & value)
+{
+  return get_boolean_param(param_name, value);
+}
+
+void PidROS::initialize(std::string topic_prefix) { set_prefixes(topic_prefix); }
+// END DEPRECATED
 
 }  // namespace control_toolbox

@@ -11,7 +11,7 @@ pull_request_rules:
 
   - name: Backport to jazzy at reviewers discretion
     conditions:
-      - base=ros2-master
+      - base=master
       - "label=backport-jazzy"
     actions:
       backport:
