@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>control_toolbox</name>
-  <version>4.0.1</version>
+  <version>5.5.0</version>
   <description>The control toolbox contains modules that are useful across all controllers.</description>
 
   <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
@@ -21,6 +21,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <build_depend>ros2_control_cmake</build_depend>
+  <build_depend>fmt</build_depend>
+
   <depend>control_msgs</depend>
   <depend>eigen</depend>
   <depend>filters</depend>
@@ -30,9 +33,11 @@
   <depend>rclcpp</depend>
   <depend>rcutils</depend>
   <depend>realtime_tools</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
 
   <test_depend>ament_cmake_gmock</test_depend>
-  <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>rclcpp_lifecycle</test_depend>
   <export>
     <build_type>ament_cmake</build_type>

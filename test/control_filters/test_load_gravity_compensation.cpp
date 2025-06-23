@@ -1,4 +1,4 @@
-// Copyright 2024 AIT - Austrian Institute of Technology GmbH
+// Copyright (c) 2023, Stogl Robotics Consulting UG (haftungsbeschränkt)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,22 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include <gmock/gmock.h>
 #include <memory>
 #include <string>
 
-#include "gmock/gmock.h"
+#include "control_filters/gravity_compensation.hpp"
+#include "geometry_msgs/msg/wrench_stamped.hpp"
 #include "pluginlib/class_loader.hpp"
 #include "rclcpp/utilities.hpp"
 
-#include "control_filters/rate_limiter.hpp"
-
-TEST(TestLoadRateLimtier, load_rate_limiter_double)
+TEST(TestLoadGravityCompensationFilter, load_gravity_compensation_filter_wrench)
 {
   rclcpp::init(0, nullptr);
 
-  pluginlib::ClassLoader<filters::FilterBase<double>> filter_loader(
-    "filters", "filters::FilterBase<double>");
-  std::shared_ptr<filters::FilterBase<double>> filter;
+  pluginlib::ClassLoader<filters::FilterBase<geometry_msgs::msg::WrenchStamped>> filter_loader(
+    "filters", "filters::FilterBase<geometry_msgs::msg::WrenchStamped>");
+  std::shared_ptr<filters::FilterBase<geometry_msgs::msg::WrenchStamped>> filter;
   auto available_classes = filter_loader.getDeclaredClasses();
   std::stringstream sstr;
   sstr << "available filters:" << std::endl;
@@ -35,9 +36,9 @@ TEST(TestLoadRateLimtier, load_rate_limiter_double)
     sstr << "  " << available_class << std::endl;
   }
 
-  std::string filter_type = "control_filters/RateLimiterDouble";
+  std::string filter_type = "control_filters/GravityCompensationWrench";
   ASSERT_TRUE(filter_loader.isClassAvailable(filter_type)) << sstr.str();
-  EXPECT_NO_THROW(filter = filter_loader.createSharedInstance(filter_type));
+  ASSERT_NO_THROW(filter = filter_loader.createSharedInstance(filter_type));
 
   rclcpp::shutdown();
 }
