@@ -17,6 +17,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "filters/filter_base.hpp"
 #include "geometry_msgs/msg/wrench_stamped.hpp"
@@ -108,17 +109,19 @@ bool LowPassFilter<T>::configure()
   {
     try
     {
-      parameter_handler_ =
-        std::make_shared<low_pass_filter::ParamListener>(this->params_interface_,
-                                                         this->param_prefix_);
+      parameter_handler_ = std::make_shared<low_pass_filter::ParamListener>(
+        this->params_interface_, this->param_prefix_);
     }
-    catch (const std::exception & ex) {
-      RCLCPP_ERROR((*logger_),
-        "LowPass filter cannot be configured: %s (type : %s)", ex.what(), typeid(ex).name());
+    catch (const std::exception & ex)
+    {
+      RCLCPP_ERROR(
+        (*logger_), "LowPass filter cannot be configured: %s (type : %s)", ex.what(),
+        typeid(ex).name());
       parameter_handler_.reset();
       return false;
     }
-    catch (...) {
+    catch (...)
+    {
       RCLCPP_ERROR((*logger_), "Caught unknown exception while configuring LowPass filter");
       parameter_handler_.reset();
       return false;
@@ -126,9 +129,7 @@ bool LowPassFilter<T>::configure()
   }
   parameters_ = parameter_handler_->get_params();
   lpf_ = std::make_shared<control_toolbox::LowPassFilter<T>>(
-    parameters_.sampling_frequency,
-    parameters_.damping_frequency,
-    parameters_.damping_intensity);
+    parameters_.sampling_frequency, parameters_.damping_frequency, parameters_.damping_intensity);
 
   return lpf_->configure();
 }
@@ -147,9 +148,27 @@ inline bool LowPassFilter<geometry_msgs::msg::WrenchStamped>::update(
   {
     parameters_ = parameter_handler_->get_params();
     lpf_->set_params(
-      parameters_.sampling_frequency,
-      parameters_.damping_frequency,
-      parameters_.damping_intensity);
+      parameters_.sampling_frequency, parameters_.damping_frequency, parameters_.damping_intensity);
+  }
+
+  return lpf_->update(data_in, data_out);
+}
+
+template <>
+inline bool LowPassFilter<std::vector<double>>::update(
+  const std::vector<double> & data_in, std::vector<double> & data_out)
+{
+  if (!this->configured_ || !lpf_ || !lpf_->is_configured())
+  {
+    throw std::runtime_error("Filter is not configured");
+  }
+
+  // Update internal parameters if required
+  if (parameter_handler_->is_old(parameters_))
+  {
+    parameters_ = parameter_handler_->get_params();
+    lpf_->set_params(
+      parameters_.sampling_frequency, parameters_.damping_frequency, parameters_.damping_intensity);
   }
 
   return lpf_->update(data_in, data_out);
@@ -168,9 +187,7 @@ bool LowPassFilter<T>::update(const T & data_in, T & data_out)
   {
     parameters_ = parameter_handler_->get_params();
     lpf_->set_params(
-      parameters_.sampling_frequency,
-      parameters_.damping_frequency,
-      parameters_.damping_intensity);
+      parameters_.sampling_frequency, parameters_.damping_frequency, parameters_.damping_intensity);
   }
 
   return lpf_->update(data_in, data_out);

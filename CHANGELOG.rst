@@ -2,6 +2,66 @@
 Changelog for package control_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+5.5.0 (2025-06-18)
+------------------
+* Use RealtimeThreadSafeBox for PID class (`#387 <https://github.com/ros-controls/control_toolbox/issues/387>`_)
+* Redefine the antiwindup strategy and their parameter interfacing (`#400 <https://github.com/ros-controls/control_toolbox/issues/400>`_)
+* Skip callback if saturation parameter is not declared (`#397 <https://github.com/ros-controls/control_toolbox/issues/397>`_)
+* Use new RT publisher API in PID class (`#394 <https://github.com/ros-controls/control_toolbox/issues/394>`_)
+* [PID] Cleanup saturation parameter in the methods and constructors (`#390 <https://github.com/ros-controls/control_toolbox/issues/390>`_)
+* Don't validate data_out if it is empty (`#391 <https://github.com/ros-controls/control_toolbox/issues/391>`_)
+* Update anti-windup techniques (`#298 <https://github.com/ros-controls/control_toolbox/issues/298>`_)
+* Contributors: Christoph Fröhlich, Sai Kishor Kothakota, Victor Coutinho Vieira Santos
+
+5.4.0 (2025-05-23)
+------------------
+* Update deprecated call to ament_target_dependencies (`#364 <https://github.com/ros-controls/control_toolbox/issues/364>`_)
+* Make member variables of LowPassFilter class generic (`#351 <https://github.com/ros-controls/control_toolbox/issues/351>`_)
+* Contributors: David V. Lu!!, Pedro de Azeredo
+
+5.3.2 (2025-05-05)
+------------------
+* fix deprecated tf2 header (`#361 <https://github.com/ros-controls/control_toolbox/issues/361>`_)
+* Contributors: Bence Magyar
+
+5.3.1 (2025-04-25)
+------------------
+* Minor filter fixes + clang-format rules update (`#347 <https://github.com/ros-controls/control_toolbox/issues/347>`_)
+* Cleanup removed msg fields (`#346 <https://github.com/ros-controls/control_toolbox/issues/346>`_)
+* Contributors: Christoph Fröhlich, Sai Kishor Kothakota
+
+5.3.0 (2025-04-24)
+------------------
+* Add std::vector<double> option to the low pass filter (`#340 <https://github.com/ros-controls/control_toolbox/issues/340>`_)
+* Contributors: Marq Rasmussen
+
+5.2.0 (2025-04-19)
+------------------
+* Fix clang-format (`#327 <https://github.com/ros-controls/control_toolbox/issues/327>`_)
+* Add gravity compensation filter (`#153 <https://github.com/ros-controls/control_toolbox/issues/153>`_)
+* Contributors: Christoph Fröhlich, GuiHome, Daniel Zumkeller, Denis Štogl
+
+5.1.0 (2025-04-06)
+------------------
+* Remove unused class variables (`#328 <https://github.com/ros-controls/control_toolbox/issues/328>`_)
+* Don't update internal states if called with dt=0 or garbage (`#326 <https://github.com/ros-controls/control_toolbox/issues/326>`_)
+* Move the package to a subfolder (`#318 <https://github.com/ros-controls/control_toolbox/issues/318>`_)
+* Contributors: Christoph Fröhlich
+
+5.0.0 (2025-03-13)
+------------------
+* Replaced gMock instead of gTest (`#300 <https://github.com/ros-controls/control_toolbox/issues/300>`_)
+* Update downstream repository branches for humble (`#312 <https://github.com/ros-controls/control_toolbox/issues/312>`_)
+* Update upstream/downstream repository branches (`#309 <https://github.com/ros-controls/control_toolbox/issues/309>`_)
+* Make downstream job a semi-binary build (`#301 <https://github.com/ros-controls/control_toolbox/issues/301>`_)
+* Cleanup duplicate entries in the msg definition (`#299 <https://github.com/ros-controls/control_toolbox/issues/299>`_)
+* [Pid] Save `i_term` instead of error integral (`#294 <https://github.com/ros-controls/control_toolbox/issues/294>`_)
+* Fix mergify config (`#296 <https://github.com/ros-controls/control_toolbox/issues/296>`_)
+* [Pid] Remove deprecated variables and methods (`#293 <https://github.com/ros-controls/control_toolbox/issues/293>`_)
+* Change workflows and readme for jazzy branch (`#292 <https://github.com/ros-controls/control_toolbox/issues/292>`_)
+* Bump version of pre-commit hooks (`#288 <https://github.com/ros-controls/control_toolbox/issues/288>`_)
+* Contributors: Aditya Pawar, Christoph Fröhlich, github-actions[bot]
+
 4.0.1 (2025-02-13)
 ------------------
 * Rename save_iterm to save_i_term (`#285 <https://github.com/ros-controls/control_toolbox/issues/285>`_)
